@@ -43,6 +43,13 @@ export default class extends React.Component<iReactRoute, iState> {
             prop: 'name',
         },
         {
+            label: 'push地址',
+            prop: 'name',
+            render: (row: any) => {
+                return <div>/api/open/{row.uuid}</div>;
+            },
+        },
+        {
             label: '创建日期',
             width: 210,
             prop: 'createdAt',
