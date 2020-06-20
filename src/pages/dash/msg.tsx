@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.less';
-import { Table, Pagination, Button, Input, Message, Dialog } from 'element-react';
+import { Table, Pagination } from 'element-react';
 import request from '../../services/request';
 import QS from 'query-string';
 
