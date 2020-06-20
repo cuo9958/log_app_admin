@@ -105,7 +105,7 @@ export default class extends React.Component<iProps, IState> {
             active: curr.name,
             layout: !curr.hideLayout,
         });
-        if (curr.title) document.title = curr.title + ' | 后缀';
+        if (curr.title) document.title = curr.title + ' | 告警APP';
     }
 
     onSelect = (index: string) => {
