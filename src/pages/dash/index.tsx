@@ -6,11 +6,21 @@ import './index.less';
 import { Table, Pagination, Button, Input, Message, Dialog } from 'element-react';
 import request from '../../services/request';
 
+interface IPushModel {
+    [index: string]: string;
+    uuid: string;
+    name: string;
+    title: string;
+    txts: string;
+    link: string;
+}
 interface iState {
     count: number;
     list: any[];
     dialogVisible: boolean;
     modelName: string;
+    showPusbox: boolean;
+    pushModel: IPushModel;
 }
 
 export default class extends React.Component<iReactRoute, iState> {
@@ -21,6 +31,14 @@ export default class extends React.Component<iReactRoute, iState> {
             count: 0,
             list: [],
             modelName: '',
+            showPusbox: false,
+            pushModel: {
+                uuid: '',
+                name: '',
+                title: '',
+                txts: '',
+                link: '',
+            },
         };
     }
 
@@ -51,12 +69,16 @@ export default class extends React.Component<iReactRoute, iState> {
         },
         {
             label: '创建日期',
-            width: 210,
+            width: 180,
             prop: 'createdAt',
+            render: (row: any) => {
+                if (!row.createdAt) return '';
+                return row.createdAt.split('.')[0];
+            },
         },
         {
             label: '操作',
-            width: 230,
+            width: 270,
             render: (row: any) => {
                 return (
                     <Button.Group>
@@ -66,9 +88,10 @@ export default class extends React.Component<iReactRoute, iState> {
                         <Button onClick={() => this.goMsg(row.uuid)} type="success" size="small">
                             历史消息
                         </Button>
-                        <Button onClick={() => this.del(row.id)} type="danger" size="small">
-                            删除
+                        <Button onClick={() => this.handlepush(row)} type="warning" size="small">
+                            发送
                         </Button>
+                        <Button icon="close" onClick={() => this.del(row.id)} type="danger" size="small"></Button>
                     </Button.Group>
                 );
             },
@@ -96,6 +119,20 @@ export default class extends React.Component<iReactRoute, iState> {
                         </Button>
                     </Dialog.Footer>
                 </Dialog>
+                <Dialog title={'给[' + this.state.pushModel.name + ']发送消息'} size="tiny" visible={this.state.showPusbox} onCancel={() => this.setState({ showPusbox: false })}>
+                    <Dialog.Body>
+                        <Input value={this.state.pushModel.title} onChange={(e: any) => this.changeModel('title', e)} placeholder="请填写合适的标题"></Input>
+                        <div className="hang"></div>
+                        <Input value={this.state.pushModel.txts} onChange={(e: any) => this.changeModel('txts', e)} placeholder="请填写合适的内容"></Input>
+                        <div className="hang"></div>
+                        <Input value={this.state.pushModel.link} onChange={(e: any) => this.changeModel('link', e)} placeholder="请填写链接"></Input>
+                    </Dialog.Body>
+                    <Dialog.Footer className="dialog-footer">
+                        <Button onClick={() => this.pushMsg()} type="primary">
+                            添加
+                        </Button>
+                    </Dialog.Footer>
+                </Dialog>
             </div>
         );
     }
@@ -107,6 +144,7 @@ export default class extends React.Component<iReactRoute, iState> {
             modelName,
         });
     }
+
     pageIndex = 1;
     async getList(pageIndex?: number) {
         if (pageIndex && !isNaN(pageIndex)) {
@@ -126,6 +164,11 @@ export default class extends React.Component<iReactRoute, iState> {
         this.getList(pageIndex);
     };
 
+    changeModel = (key: string, val: string) => {
+        let model = this.state.pushModel;
+        model[key] = val;
+        this.setState({ pushModel: model });
+    };
     handleClick = () => {
         this.setState({
             dialogVisible: true,
@@ -164,5 +207,38 @@ export default class extends React.Component<iReactRoute, iState> {
             console.log(error.message);
             Message.error('删除失败');
         }
+    }
+
+    handlepush = (data: any) => {
+        this.setState({
+            showPusbox: true,
+            pushModel: {
+                uuid: data.uuid,
+                name: data.name,
+                title: '',
+                txts: '',
+                link: '',
+            },
+        });
+    };
+
+    async pushMsg() {
+        console.log(this.state.pushModel);
+        try {
+            await request.post('/open/push/' + this.state.pushModel.uuid, this.state.pushModel);
+        } catch (error) {
+            console.log(error);
+        }
+        Message.success('发送成功');
+        this.setState({
+            showPusbox: false,
+            pushModel: {
+                uuid: '',
+                name: '',
+                title: '',
+                txts: '',
+                link: '',
+            },
+        });
     }
 }

@@ -4,40 +4,40 @@ import Client from '../pages/dash/client';
 import Msg from '../pages/dash/msg';
 
 export default [
-    // {
-    //     /**
-    //      * 页面名,菜单命中
-    //      */
-    //     name: 'home',
-    //     /**
-    //      * 显示名称
-    //      */
-    //     title: '',
-    //     /**
-    //      * 图标
-    //      */
-    //     icon: '',
-    //     /**
-    //      * url路径
-    //      */
-    //     path: '/',
-    //     /**
-    //      * 页面组件
-    //      */
-    //     page: Dash,
-    //     /**
-    //      * 是否强制匹配
-    //      */
-    //     exact: true,
-    //     /**
-    //      * 是否隐藏外层视图
-    //      */
-    //     hideLayout: false,
-    //     /**
-    //      * 是否不在菜单展示
-    //      */
-    //     hide: false,
-    // },
+    {
+        /**
+         * 页面名,菜单命中
+         */
+        name: 'dash',
+        /**
+         * 显示名称
+         */
+        title: '',
+        /**
+         * 图标
+         */
+        icon: '',
+        /**
+         * url路径
+         */
+        path: '/',
+        /**
+         * 页面组件
+         */
+        page: Dash,
+        /**
+         * 是否强制匹配
+         */
+        exact: true,
+        /**
+         * 是否隐藏外层视图
+         */
+        hideLayout: false,
+        /**
+         * 是否不在菜单展示
+         */
+        hide: true,
+    },
     //管理首页
     { name: 'dash', title: '项目管理', path: '/dash', icon: 'fa fa-dashboard', page: Dash, exact: true },
     { name: 'dash', title: '客户端管理', path: '/dash/client', page: Client, exact: true, hide: true },
